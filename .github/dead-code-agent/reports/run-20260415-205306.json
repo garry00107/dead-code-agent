@@ -1,0 +1,1036 @@
+{
+  "schema_version": "1.0",
+  "run_id": "20260415-205306",
+  "timestamp": "2026-04-15T20:53:06.088600+00:00",
+  "run_url": "local://self-test",
+  "config": {
+    "threshold": 0.92,
+    "target": ".github/dead-code-agent",
+    "mode": "self_test"
+  },
+  "metrics": {
+    "total_clusters": 19,
+    "threshold_passing": 0,
+    "total_symbols_flagged": 0,
+    "total_files_affected": 0,
+    "avg_confidence": 0.6193,
+    "confidence_distribution": {
+      "0.00-0.49": 2,
+      "0.50-0.69": 17,
+      "0.70-0.84": 0,
+      "0.85-0.91": 0,
+      "0.92-0.95": 0,
+      "0.96-0.99": 0
+    }
+  },
+  "root_detection": {
+    "tier1_explicit": {
+      "count": 249,
+      "sample": [
+        ".github.dead-code-agent.dry_run_self.__main__",
+        ".github.dead-code-agent.dry_run_self.main",
+        ".github.dead-code-agent.layer1_static.__main__",
+        ".github.dead-code-agent.layer1_static.main",
+        ".github.dead-code-agent.layer2_agent.__main__",
+        ".github.dead-code-agent.layer2_agent.main",
+        ".github.dead-code-agent.notify_slack.__main__",
+        ".github.dead-code-agent.notify_slack.build_slack_payload",
+        ".github.dead-code-agent.notify_slack.main",
+        ".github.dead-code-agent.pr_generator.__main__"
+      ]
+    },
+    "tier2_framework": {
+      "count": 0,
+      "sample": []
+    },
+    "tier2.5_learned": {
+      "count": 0,
+      "sample": []
+    },
+    "tier3_declared": {
+      "count": 0,
+      "sample": []
+    },
+    "total": 249
+  },
+  "decisions": [
+    {
+      "cluster_id": "a749e51b6cca30f8",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/deletion_planner.py"
+      ],
+      "combined_confidence": 0.6333,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.deletion_planner.DeletionPlanner.__init__",
+          "file_path": ".github/dead-code-agent/deletion_planner.py",
+          "lines": "38-39",
+          "confidence": 0.6333,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "strong",
+              "source": "ripgrep",
+              "detail": "ripgrep found 0 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "strong",
+              "source": "import_graph",
+              "detail": "Imported by 0 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "weak",
+              "source": "test_scanner",
+              "detail": "Test references found"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "835054ccc1b608e4",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/git_operations.py"
+      ],
+      "combined_confidence": 0.3667,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.git_operations.GitOperations",
+          "file_path": ".github/dead-code-agent/git_operations.py",
+          "lines": "29-286",
+          "confidence": 0.3667,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "weak",
+              "source": "ripgrep",
+              "detail": "ripgrep found 1 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "weak",
+              "source": "import_graph",
+              "detail": "Imported by 1 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "moderate",
+              "source": "test_scanner",
+              "detail": "No test references found across 11 test files"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "532b8a2dce46bb81",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/smoke_test.py"
+      ],
+      "combined_confidence": 0.3,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.smoke_test.SmokeTestRunner",
+          "file_path": ".github/dead-code-agent/smoke_test.py",
+          "lines": "35-259",
+          "confidence": 0.3,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "weak",
+              "source": "ripgrep",
+              "detail": "ripgrep found 1 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "weak",
+              "source": "import_graph",
+              "detail": "Imported by 1 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "weak",
+              "source": "test_scanner",
+              "detail": "Test references found"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "6550f9a658fafdff",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/smoke_test.py"
+      ],
+      "combined_confidence": 0.6333,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.smoke_test.SmokeTestRunner.__init__",
+          "file_path": ".github/dead-code-agent/smoke_test.py",
+          "lines": "40-42",
+          "confidence": 0.6333,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "strong",
+              "source": "ripgrep",
+              "detail": "ripgrep found 0 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "strong",
+              "source": "import_graph",
+              "detail": "Imported by 0 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "weak",
+              "source": "test_scanner",
+              "detail": "Test references found"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "cb65823c65829ca6",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/pr_generator.py"
+      ],
+      "combined_confidence": 0.6333,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.pr_generator.PRGeneratorOrchestrator.__init__",
+          "file_path": ".github/dead-code-agent/pr_generator.py",
+          "lines": "50-73",
+          "confidence": 0.6333,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "strong",
+              "source": "ripgrep",
+              "detail": "ripgrep found 0 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "strong",
+              "source": "import_graph",
+              "detail": "Imported by 0 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "weak",
+              "source": "test_scanner",
+              "detail": "Test references found"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "99db73ec52b87d58",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/root_detector.py"
+      ],
+      "combined_confidence": 0.6333,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.root_detector.RootDetector.__init__",
+          "file_path": ".github/dead-code-agent/root_detector.py",
+          "lines": "53-65",
+          "confidence": 0.6333,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "strong",
+              "source": "ripgrep",
+              "detail": "ripgrep found 0 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "strong",
+              "source": "import_graph",
+              "detail": "Imported by 0 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "weak",
+              "source": "test_scanner",
+              "detail": "Test references found"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "277f2fe32c3bfa96",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/adversarial_judge.py"
+      ],
+      "combined_confidence": 0.6333,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.adversarial_judge.AdversarialJudge.__init__",
+          "file_path": ".github/dead-code-agent/adversarial_judge.py",
+          "lines": "182-190",
+          "confidence": 0.6333,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "strong",
+              "source": "ripgrep",
+              "detail": "ripgrep found 0 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "strong",
+              "source": "import_graph",
+              "detail": "Imported by 0 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "weak",
+              "source": "test_scanner",
+              "detail": "Test references found"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "6daa28daa2bd1db9",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/framework_detectors.py"
+      ],
+      "combined_confidence": 0.7,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.framework_detectors.NestJSDetector",
+          "file_path": ".github/dead-code-agent/framework_detectors.py",
+          "lines": "364-431",
+          "confidence": 0.7,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "strong",
+              "source": "ripgrep",
+              "detail": "ripgrep found 0 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "strong",
+              "source": "import_graph",
+              "detail": "Imported by 0 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "moderate",
+              "source": "test_scanner",
+              "detail": "No test references found across 11 test files"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "9f84c1138e7de73d",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/framework_detectors.py"
+      ],
+      "combined_confidence": 0.6333,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.framework_detectors.LearnedPatternDetector.__init__",
+          "file_path": ".github/dead-code-agent/framework_detectors.py",
+          "lines": "582-583",
+          "confidence": 0.6333,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "strong",
+              "source": "ripgrep",
+              "detail": "ripgrep found 0 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "strong",
+              "source": "import_graph",
+              "detail": "Imported by 0 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "weak",
+              "source": "test_scanner",
+              "detail": "Test references found"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "394b5a88e1b6fa2f",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/safety_gate.py"
+      ],
+      "combined_confidence": 0.6333,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.safety_gate.SafetyGate.__init__",
+          "file_path": ".github/dead-code-agent/safety_gate.py",
+          "lines": "38-46",
+          "confidence": 0.6333,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "strong",
+              "source": "ripgrep",
+              "detail": "ripgrep found 0 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "strong",
+              "source": "import_graph",
+              "detail": "Imported by 0 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "weak",
+              "source": "test_scanner",
+              "detail": "Test references found"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "ccaa328c9d79fa69",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/layer1_static.py"
+      ],
+      "combined_confidence": 0.6333,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.layer1_static.StaticAnalyzer.__init__",
+          "file_path": ".github/dead-code-agent/layer1_static.py",
+          "lines": "57-59",
+          "confidence": 0.6333,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "strong",
+              "source": "ripgrep",
+              "detail": "ripgrep found 0 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "strong",
+              "source": "import_graph",
+              "detail": "Imported by 0 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "weak",
+              "source": "test_scanner",
+              "detail": "Test references found"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "b05f175de5fed505",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/graph_builder.py"
+      ],
+      "combined_confidence": 0.6333,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.graph_builder.GraphBuilder.__init__",
+          "file_path": ".github/dead-code-agent/graph_builder.py",
+          "lines": "97-109",
+          "confidence": 0.6333,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "strong",
+              "source": "ripgrep",
+              "detail": "ripgrep found 0 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "strong",
+              "source": "import_graph",
+              "detail": "Imported by 0 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "weak",
+              "source": "test_scanner",
+              "detail": "Test references found"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "c4655f04101a9e47",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/layer2_agent.py"
+      ],
+      "combined_confidence": 0.6333,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.layer2_agent.AgentInvestigator.__init__",
+          "file_path": ".github/dead-code-agent/layer2_agent.py",
+          "lines": "54-66",
+          "confidence": 0.6333,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "strong",
+              "source": "ripgrep",
+              "detail": "ripgrep found 0 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "strong",
+              "source": "import_graph",
+              "detail": "Imported by 0 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "weak",
+              "source": "test_scanner",
+              "detail": "Test references found"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "95b4bcfe8b7b0257",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/framework_detectors.py"
+      ],
+      "combined_confidence": 0.7,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.framework_detectors.NextJSDetector",
+          "file_path": ".github/dead-code-agent/framework_detectors.py",
+          "lines": "494-557",
+          "confidence": 0.7,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "strong",
+              "source": "ripgrep",
+              "detail": "ripgrep found 0 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "strong",
+              "source": "import_graph",
+              "detail": "Imported by 0 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "moderate",
+              "source": "test_scanner",
+              "detail": "No test references found across 11 test files"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "be55b7e23850f38a",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/framework_detectors.py"
+      ],
+      "combined_confidence": 0.7,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.framework_detectors.ExpressDetector",
+          "file_path": ".github/dead-code-agent/framework_detectors.py",
+          "lines": "434-491",
+          "confidence": 0.7,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "strong",
+              "source": "ripgrep",
+              "detail": "ripgrep found 0 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "strong",
+              "source": "import_graph",
+              "detail": "Imported by 0 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "moderate",
+              "source": "test_scanner",
+              "detail": "No test references found across 11 test files"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "881e9374f79b7b01",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/adversarial_judge.py"
+      ],
+      "combined_confidence": 0.7,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.adversarial_judge.AdversarialJudge.assess_cluster",
+          "file_path": ".github/dead-code-agent/adversarial_judge.py",
+          "lines": "235-263",
+          "confidence": 0.7,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "strong",
+              "source": "ripgrep",
+              "detail": "ripgrep found 0 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "strong",
+              "source": "import_graph",
+              "detail": "Imported by 0 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "moderate",
+              "source": "test_scanner",
+              "detail": "No test references found across 11 test files"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "0b72f8c41a9c3a63",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/git_operations.py"
+      ],
+      "combined_confidence": 0.6333,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.git_operations.GitOperations.__init__",
+          "file_path": ".github/dead-code-agent/git_operations.py",
+          "lines": "34-42",
+          "confidence": 0.6333,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "strong",
+              "source": "ripgrep",
+              "detail": "ripgrep found 0 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "strong",
+              "source": "import_graph",
+              "detail": "Imported by 0 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "weak",
+              "source": "test_scanner",
+              "detail": "Test references found"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "9c930fd64863499e",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/graph_traversal.py"
+      ],
+      "combined_confidence": 0.6333,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.graph_traversal.GraphTraversal.__init__",
+          "file_path": ".github/dead-code-agent/graph_traversal.py",
+          "lines": "43-45",
+          "confidence": 0.6333,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "strong",
+              "source": "ripgrep",
+              "detail": "ripgrep found 0 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "strong",
+              "source": "import_graph",
+              "detail": "Imported by 0 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "weak",
+              "source": "test_scanner",
+              "detail": "Test references found"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    },
+    {
+      "cluster_id": "1397c58d1504a807",
+      "symbol_count": 1,
+      "files_affected": [
+        ".github/dead-code-agent/models.py"
+      ],
+      "combined_confidence": 0.7,
+      "decision": "below_threshold",
+      "symbols": [
+        {
+          "fqn": ".github.dead-code-agent.models.load_pr_result",
+          "file_path": ".github/dead-code-agent/models.py",
+          "lines": "134-136",
+          "confidence": 0.7,
+          "evidence_summary": [
+            {
+              "signal": "zero_references",
+              "weight": "strong",
+              "source": "ripgrep",
+              "detail": "ripgrep found 0 matches across 485 files"
+            },
+            {
+              "signal": "scc_isolated",
+              "weight": "strong",
+              "source": "graph_traversal",
+              "detail": "In SCC of 1 node(s) with 0 inbound edge(s) from alive code"
+            },
+            {
+              "signal": "import_orphan",
+              "weight": "strong",
+              "source": "import_graph",
+              "detail": "Imported by 0 module(s)"
+            },
+            {
+              "signal": "no_test_coverage",
+              "weight": "moderate",
+              "source": "test_scanner",
+              "detail": "No test references found across 11 test files"
+            }
+          ],
+          "deletion_type": "inline_removal"
+        }
+      ],
+      "triage": {
+        "status": "pending",
+        "reviewer": null,
+        "reviewed_at": null,
+        "notes": null,
+        "root_added": null
+      }
+    }
+  ],
+  "proposed_patterns": [],
+  "triage_summary": {
+    "total": 19,
+    "pending": 19,
+    "true_positives": 0,
+    "false_positives": 0,
+    "uncertain": 0,
+    "false_positive_rate": null
+  }
+}

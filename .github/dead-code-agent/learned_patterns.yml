@@ -1,0 +1,28 @@
+# learned_patterns.yml — Tier 2.5: Agent-discovered, human-confirmed patterns
+#
+# The LLM adversarial judge proposes entries here when it discovers
+# dynamic dispatch patterns that static analysis cannot detect.
+#
+# Workflow:
+#   1. Agent discovers a pattern (e.g., @register_handler) during a run
+#   2. Agent adds an entry with status: proposed
+#   3. Engineer reviews and changes status to: confirmed (or: rejected)
+#   4. Confirmed patterns are applied as deterministic AST root rules
+#
+# Supported types:
+#   - decorator_root:           Functions/classes decorated with a specific decorator
+#   - class_inheritance_root:   Classes inheriting from a specific base class
+#   - function_call_root:       Functions passed as args to a specific registration call
+#   - module_export_root:       Symbols exported via __all__ or export keyword
+#   - config_reference_root:    Symbols referenced in config files (YAML, JSON, TOML)
+
+patterns: []
+  # Example of a confirmed pattern:
+  # - name: corp_event_bus_handler
+  #   type: decorator_root
+  #   match: "register_handler"
+  #   scope: "src/**/*.py"
+  #   language: python
+  #   discovered: "2026-04-14"
+  #   confirmed_by_runs: [42, 47, 51]
+  #   status: confirmed

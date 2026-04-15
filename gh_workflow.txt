@@ -1,0 +1,174 @@
+# .github/workflows/dead-code-agent.yml
+#
+# Runs on a weekly schedule + manual trigger.
+# Never runs on PRs — avoids recursive loops.
+
+name: Dead Code Removal Agent
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"        # Every Monday 9am UTC — start of week, not Friday
+  workflow_dispatch:            # Manual trigger with inputs
+    inputs:
+      dry_run:
+        description: "Dry run — analyse only, don't open PRs"
+        type: boolean
+        default: true
+      confidence_override:
+        description: "Minimum confidence threshold (default 0.92)"
+        type: string
+        default: "0.92"
+      target_path:
+        description: "Scope to a subdirectory (e.g. src/payments)"
+        type: string
+        default: ""
+
+# Only one run at a time — no concurrent PR storms
+concurrency:
+  group: dead-code-agent
+  cancel-in-progress: false     # Don't cancel in-progress — let it finish cleanly
+
+jobs:
+  analyse:
+    name: "Layer 1+2 — Static Analysis & Agent Investigation"
+    runs-on: ubuntu-latest
+    outputs:
+      clusters_found: ${{ steps.analyse.outputs.clusters_found }}
+      report_path: ${{ steps.analyse.outputs.report_path }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0        # Full history — needed for git blame signals
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r .github/dead-code-agent/requirements.txt
+
+      - name: Run Layer 1 — Static Analysis
+        id: static
+        run: |
+          python .github/dead-code-agent/layer1_static.py \
+            --target "${{ inputs.target_path || 'src' }}" \
+            --output /tmp/static_candidates.json
+          echo "candidates=$(jq length /tmp/static_candidates.json)" >> $GITHUB_OUTPUT
+
+      - name: Run Layer 2+3 — Agent Investigation
+        id: analyse
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LAUNCHDARKLY_API_KEY: ${{ secrets.LAUNCHDARKLY_API_KEY }}
+          CONFIDENCE_THRESHOLD: ${{ inputs.confidence_override || '0.92' }}
+        run: |
+          python .github/dead-code-agent/layer2_agent.py \
+            --candidates /tmp/static_candidates.json \
+            --threshold $CONFIDENCE_THRESHOLD \
+            --output /tmp/clusters.json
+
+          CLUSTERS=$(jq '[.[] | select(.combined_confidence >= ($threshold | tonumber))] | length' \
+            --arg threshold $CONFIDENCE_THRESHOLD /tmp/clusters.json)
+
+          echo "clusters_found=$CLUSTERS" >> $GITHUB_OUTPUT
+          echo "report_path=/tmp/clusters.json" >> $GITHUB_OUTPUT
+
+      - name: Upload analysis report
+        uses: actions/upload-artifact@v4
+        with:
+          name: dead-code-report-${{ github.run_id }}
+          path: /tmp/clusters.json
+          retention-days: 30    # Keep for audit trail
+
+      - name: Post summary
+        run: |
+          python .github/dead-code-agent/summarize.py \
+            --clusters /tmp/clusters.json >> $GITHUB_STEP_SUMMARY
+
+  open-prs:
+    name: "Layer 3 — Generate PRs"
+    needs: analyse
+    if: |
+      needs.analyse.outputs.clusters_found > 0 &&
+      inputs.dry_run != 'true' &&
+      github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+
+    # Cap: never open more than 5 PRs per run — avoids PR queue flooding
+    strategy:
+      matrix:
+        batch: [0, 1, 2, 3, 4]
+      max-parallel: 1           # Sequential — each PR needs a clean git state
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.BOT_GITHUB_TOKEN }}    # Bot token — not GITHUB_TOKEN
+                                                     # Allows PR creation + push
+
+      - name: Configure git identity
+        run: |
+          git config user.name  "dead-code-bot[bot]"
+          git config user.email "dead-code-bot@users.noreply.github.com"
+
+      - name: Download analysis report
+        uses: actions/download-artifact@v4
+        with:
+          name: dead-code-report-${{ github.run_id }}
+          path: /tmp
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r .github/dead-code-agent/requirements.txt
+
+      - name: Generate PR for cluster ${{ matrix.batch }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python .github/dead-code-agent/pr_generator.py \
+            --clusters /tmp/clusters.json \
+            --batch-index ${{ matrix.batch }} \
+            --repo "${{ github.repository }}" \
+            --base-branch main \
+            --output /tmp/pr_result_${{ matrix.batch }}.json
+
+      - name: Upload PR result
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-result-${{ github.run_id }}-${{ matrix.batch }}
+          path: /tmp/pr_result_${{ matrix.batch }}.json
+          retention-days: 30
+
+  notify:
+    name: "Notify team"
+    needs: [analyse, open-prs]
+    if: always()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all PR results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: pr-result-${{ github.run_id }}-*
+          merge-multiple: true
+          path: /tmp/pr-results
+
+      - name: Post Slack summary
+        env:
+          SLACK_WEBHOOK: ${{ secrets.DEAD_CODE_SLACK_WEBHOOK }}
+        run: |
+          python .github/dead-code-agent/notify_slack.py \
+            --results-dir /tmp/pr-results \
+            --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

@@ -1,0 +1,21 @@
+# roots.yml — Tier 3: Human-maintained declared roots
+#
+# Symbols or patterns listed here are always considered "live" entry points,
+# even when no static reference is found in the call graph.
+#
+# Use this file when the dead code agent incorrectly flags a symbol as dead.
+# Adding an entry here prevents it from being flagged in future runs.
+#
+# Format: glob patterns matched against fully-qualified symbol names.
+# Patterns are case-sensitive and support * and ** wildcards.
+
+always_live:
+  # Example: symbols called via reflection or external RPC
+  # - src.rpc.handlers.*
+  # - src.api.public_v2.**
+
+  # Example: plugin system — dynamically loaded
+  # - src.plugins.*.register
+
+  # Example: health checks called by infrastructure
+  # - src.monitoring.health_check
