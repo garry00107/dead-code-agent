@@ -124,42 +124,12 @@ jobs:
 
       - name: Generate shadow report
         id: report
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          python -c "
-import json, sys
-sys.path.insert(0, '.github/dead-code-agent')
-from shadow_report import build_shadow_report, save_report, generate_run_id, report_to_markdown
-from models import load_clusters_from_json
-
-# Load clusters
-clusters = load_clusters_from_json('/tmp/clusters.json')
-threshold = float('${{ inputs.confidence_override || 0.92 }}')
-passing = [c for c in clusters if c.combined_confidence >= threshold]
-
-# Build report
-run_id = generate_run_id()
-report = build_shadow_report(
-    run_id=run_id,
-    all_clusters=clusters,
-    threshold_passing=passing,
-    roots_by_tier={},  # Populated from layer1 in future
-    proposed_patterns=[],
-    config={'threshold': threshold, 'target': '${{ inputs.target_path || \"src\" }}'},
-    run_url='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}',
-)
-
-# Save
-path = save_report(report)
-print(f'report_path={path}', file=open('$GITHUB_OUTPUT', 'a') if '$GITHUB_OUTPUT' != '' else sys.stdout)
-
-# Markdown summary
-md = report_to_markdown(report)
-with open('$GITHUB_STEP_SUMMARY', 'a') as f:
-    f.write(md)
-"
-          echo "report_path=.github/dead-code-agent/reports/run-$(date -u +%Y%m%d-%H%M%S).json" >> $GITHUB_OUTPUT
+          python .github/dead-code-agent/generate_shadow_report.py \
+            --clusters /tmp/clusters.json \
+            --threshold "${{ inputs.confidence_override || '0.92' }}" \
+            --target "${{ inputs.target_path || 'src' }}" \
+            --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
       - name: Commit shadow report
         run: |
