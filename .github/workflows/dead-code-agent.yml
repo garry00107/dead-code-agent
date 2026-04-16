@@ -234,12 +234,10 @@ jobs:
         env:
           SLACK_WEBHOOK: ${{ secrets.DEAD_CODE_SLACK_WEBHOOK }}
         run: |
-          SHADOW_FLAGS=""
-          if [ "${{ inputs.dry_run }}" = "true" ]; then
-            SHADOW_FLAGS="--shadow-mode --shadow-report ${{ needs.shadow-report.outputs.report_path || '' }}"
-          fi
+          # Ensure results dir exists even if download step was skipped
+          mkdir -p /tmp/pr-results
 
           python .github/dead-code-agent/notify_slack.py \
             --results-dir /tmp/pr-results \
-            --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
-            $SHADOW_FLAGS
+            --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        continue-on-error: true

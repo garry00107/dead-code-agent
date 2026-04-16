@@ -271,7 +271,8 @@ def main(argv: list[str] | None = None) -> None:
     # Get webhook URL
     webhook = os.environ.get("SLACK_WEBHOOK", "")
     if not webhook:
-        logger.error("SLACK_WEBHOOK environment variable not set")
+        logger.warning("SLACK_WEBHOOK not set — skipping Slack notification")
+        print("⚠️ Slack webhook not configured. Set DEAD_CODE_SLACK_WEBHOOK secret to enable notifications.")
         return
 
     payload = build_slack_payload(
